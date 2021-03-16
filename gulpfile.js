@@ -1,16 +1,17 @@
-const gulp         = require('gulp'),
-    sass         = require('gulp-sass'),
-    browsersync  = require('browser-sync').create(),
-    del          = require('del'),
-    imagemin     = require('gulp-imagemin'),
-    autoprefixer = require('gulp-autoprefixer'),
-    csso         = require('gulp-csso'),
-    pug          = require('gulp-pug'),
-    data         = require('gulp-data'),
-    htmlmin      = require('gulp-htmlmin'),
-    uglify       = require('gulp-uglify'),
-    concat       = require('gulp-concat'),
-    pump         = require('pump');
+const gulp         = require('gulp');
+const sass         = require('gulp-sass');
+const browsersync  = require('browser-sync').create();
+const del          = require('del');
+const imagemin     = require('gulp-imagemin');
+const autoprefixer = require('gulp-autoprefixer');
+const csso         = require('gulp-csso');
+const pug          = require('gulp-pug');
+const data         = require('gulp-data');
+const htmlmin      = require('gulp-htmlmin');
+const uglify       = require('gulp-uglify');
+const concat       = require('gulp-concat');
+const pump         = require('pump');
+const svgSprite    = require('gulp-svg-sprite');
 
 
 const path = {
@@ -31,18 +32,36 @@ const path = {
         watchSource: './js/**/*.js',
     },
     images:   {
-        source: './assets/img/**/*',
+        source: './assets/img/',
         dest:   './build/assets/img/',
     },
     fonts:    {
         source: './assets/fonts/**/*',
         dest:   './build/assets/fonts/',
     },
+    svgSprite: {
+        source: './assets/img/svg/*.svg',
+        dest: './build/assets/img/svg/',
+    }
 };
 
 // Clean
 gulp.task('clean', done => {
     del.sync(path.build);
+    done();
+});
+
+// Svg Sprite
+gulp.task('svgSprite', done => {
+    gulp.src(path.svgSprite.source)
+        .pipe(svgSprite({
+            mode: {
+                stack: {
+                    sprite: '../sprite.svg',
+                }
+            }
+        }))
+        .pipe(gulp.dest(path.svgSprite.dest));
     done();
 });
 
@@ -126,4 +145,4 @@ gulp.task('watch', done => {
     done();
 });
 
-gulp.task('default', gulp.parallel('clean', 'css', 'html', 'scripts', 'fonts', 'images', 'browser-sync', 'watch'));
+gulp.task('default', gulp.parallel('clean', 'css', 'html', 'scripts', 'fonts', 'svgSprite', 'images', 'browser-sync', 'watch'));
