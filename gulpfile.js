@@ -6,6 +6,7 @@ const imagemin     = require('gulp-imagemin');
 const autoprefixer = require('gulp-autoprefixer');
 const csso         = require('gulp-csso');
 const pug          = require('gulp-pug');
+const bem          = require('gulp-pugbem');
 const data         = require('gulp-data');
 const htmlmin      = require('gulp-htmlmin');
 const uglify       = require('gulp-uglify');
@@ -30,6 +31,11 @@ const path = {
         source:      './js/**/*',
         dest:        './build/js/',
         watchSource: './js/**/*.js',
+    },
+    pug: {
+        source: './pages/**/*.pug',
+        dest: './build',
+        watchSource: './pages/**/*.pug',
     },
     images:   {
         source: './assets/img/',
@@ -93,6 +99,17 @@ gulp.task('html', done => {
     done();
 });
 
+// Pug
+gulp.task('pug', done => {
+    gulp
+        .src(path.pug.source)
+        .pipe(pug({
+            plugins: [bem],
+        }))
+        .pipe(gulp.dest(path.build));
+    done();
+});
+
 // Scripts
 gulp.task('scripts', cb => {
     pump([
@@ -140,9 +157,9 @@ gulp.task('browser-sync', done => {
 // Watch files
 gulp.task('watch', done => {
     gulp.watch(path.css.watchSource, gulp.series('css', reload));
-    gulp.watch(path.html.watchSource, gulp.series('html', reload));
+    gulp.watch(path.pug.watchSource, gulp.series('pug', reload));
     gulp.watch(path.scripts.watchSource, gulp.series('scripts', reload));
     done();
 });
 
-gulp.task('default', gulp.parallel('clean', 'css', 'html', 'scripts', 'fonts', 'svgSprite', 'images', 'browser-sync', 'watch'));
+gulp.task('default', gulp.parallel('clean', 'css', 'pug', 'scripts', 'fonts', 'svgSprite', 'images', 'browser-sync', 'watch'));
