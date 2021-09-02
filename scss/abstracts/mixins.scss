@@ -5,6 +5,29 @@
   @return $size / $root-font-size * 1rem;
 }
 
+@function strip-unit($value) {
+  @return $value / ($value * 0 + 1);
+}
+
+@mixin fluid-type($min-font-size, $max-font-size, $min-vw: 320px, $max-vw: 1920px) {
+  $u1: unit($min-vw);
+  $u2: unit($max-vw);
+  $u3: unit($min-font-size);
+  $u4: unit($max-font-size);
+
+  @if $u1 == $u2 and $u1 == $u3 and $u1 == $u4 {
+    & {
+      font-size: $min-font-size;
+      @media screen and (min-width: $min-vw) {
+        font-size: calc(#{$min-font-size} + #{strip-unit($max-font-size - $min-font-size)} * ((100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)}));
+      }
+      @media screen and (min-width: $max-vw) {
+        font-size: $max-font-size;
+      }
+    }
+  }
+}
+
 @mixin flexCentred {
   display: flex;
   justify-content: center;
@@ -30,14 +53,14 @@
 
 @mixin heading($size: 36px, $color: $text-dark-color) {
   font-family: $primary-font;
-  font-size: rem($size);
+  @include fluid-type($size / 3, $size);
   font-weight: 800;
   color: $color;
 }
 
 @mixin text($size: 16px, $color: $text-primary-color, $weight: 400) {
   font-family: $secondary-font;
-  font-size: rem($size);
+  @include fluid-type($size - 4, $size);
   font-weight: $weight;
   color: $color;
 }

@@ -1,6 +1,6 @@
 // This is example file, you can remove it
-@import "./vars.scss";
-@import "./mixins.scss";
+@import "./abstracts/vars.scss";
+@import "./abstracts/mixins.scss";
 
 #waves-bg {
   position: fixed;
@@ -24,7 +24,7 @@
   &__subtitle {
     display: block;
     margin-top: rem(25px);
-    @include text(18px, $text-light-color);
+    @include text(18px, $text-dark-color);
   }
 }
 

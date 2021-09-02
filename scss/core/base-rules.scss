@@ -1,5 +1,5 @@
-@import './vars.scss';
-@import './mixins.scss';
+@import './abstracts/vars.scss';
+@import './abstracts/mixins.scss';
 
 * {
   box-sizing: border-box;
@@ -12,5 +12,5 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background-color: $bg-color;
+  background-color: $grey-light-color;
 }

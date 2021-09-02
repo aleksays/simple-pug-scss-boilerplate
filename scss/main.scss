@@ -1,3 +1,6 @@
 // Import here all parts of styles
-@import "./base-rules.scss";
+@import "./abstracts/vars.scss";
+@import "./abstracts/mixins.scss";
+
+@import "./core/base-rules.scss";
 @import "./example.scss";
